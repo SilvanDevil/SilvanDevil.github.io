@@ -1,37 +1,21 @@
-## Welcome to GitHub Pages
+---
+title: "网络攻击学习"
+tags: ""
+---
+## CSRF跨站点请求伪造(Cross—Site Request Forgery)
 
-You can use the [editor on GitHub](https://github.com/SilvanDevil/marvelousdh.github.io/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+### CSRF攻击原理及过程如下：
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+1.  用户C打开浏览器，访问受信任网站A，输入用户名和密码请求登录网站A；
 
-### Markdown
+2.  在用户信息通过验证后，网站A产生Cookie信息并返回给浏览器，此时用户登录网站A成功，可以正常发送请求到网站A；
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+3.  用户未退出网站A之前，在同一浏览器中，打开一个TAB页访问网站B；
 
-```markdown
-Syntax highlighted code block
+4.  网站B接收到用户请求后，返回一些攻击性代码，并发出一个请求要求访问第三方站点A；
 
-# Header 1
-## Header 2
-### Header 3
+5.  浏览器在接收到这些攻击性代码后，根据网站B的请求，在用户不知情的情况下携带Cookie信息，向网站A发出请求。网站A并不知道该请求其实是由B发起的，所以会根据用户C的Cookie信息以C的权限处理该请求，导致来自网站B的恶意代码被执行。 
 
-- Bulleted
-- List
+### CSRF防御原理:
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/SilvanDevil/marvelousdh.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+        CSRF防护的一个重点是要对“用户凭证”进行校验处理，通过这种机制可以对用户的请求是合法进行判断，判断是不是跨站攻击的行为。因为“用户凭证”是Cookie中存储的，所以防护机制的处理对像也是Cookie的数据，我们要在防护的数据中加入签名校验，并对数据进行生命周期时间管理，就是数据过期管理。
